@@ -1,16 +1,19 @@
 [project]
 name = "etsy-image-generator"
-version = "0.1.0"
-description = "Generate Etsy-ready product images for shop listings"
+version = "2.0.0"
+description = "Pro-grade Etsy product image generator with AI-powered prompt engineering and multi-provider support"
 requires-python = ">=3.11"
 dependencies = [
     "streamlit>=1.30.0",
     "replicate>=0.25.0",
     "openai>=1.10.0",
+    "google-genai>=1.0.0",
     "Pillow>=10.2.0",
     "python-dotenv>=1.0.0",
     "pydantic>=2.5.0",
     "httpx>=0.26.0",
+    "plotly>=5.18.0",
+    "pandas>=2.1.0",
 ]
 
 [project.optional-dependencies]
