@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import io
-import json
 import logging
 import shutil
 import sys
@@ -13,13 +12,11 @@ from pathlib import Path
 
 import streamlit as st
 from dotenv import load_dotenv
-from PIL import Image
 
 # Ensure project root is on the path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from core.models import Listing, Variation
-from core.pipeline import run_batch
 from core.postprocess import ETSY_SIZES
 from core.providers import get_provider
 from prompts.templates import BACKGROUNDS, POSES, TEMPLATES
