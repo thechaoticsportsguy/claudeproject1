@@ -1,0 +1,31 @@
+{
+  "listings": [
+    {
+      "sku": "PJ-001",
+      "title": "Satin Bridal Party Pajama Set",
+      "description": "Luxurious satin pajama set for bridal parties",
+      "color": "dark brown",
+      "piping_color": "white",
+      "pose": "standing",
+      "background_style": "clean studio"
+    },
+    {
+      "sku": "PJ-002",
+      "title": "Blush Pink Satin PJ Set",
+      "description": "Soft blush pink satin pajamas with gold piping",
+      "color": "blush pink",
+      "piping_color": "gold",
+      "pose": "sitting",
+      "background_style": "luxury bedroom"
+    },
+    {
+      "sku": "PJ-003",
+      "title": "Navy Blue Bridal Robe Set",
+      "description": "Elegant navy blue satin robe for bridesmaids",
+      "color": "navy blue",
+      "piping_color": "silver",
+      "pose": "standing",
+      "background_style": "minimalist white"
+    }
+  ]
+}
