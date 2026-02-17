@@ -1,8 +1,3 @@
-[tool.poetry]
-name = "etsy-image-generator"
-version = "2.0.0"
-package-mode = false
-
 [project]
 name = "etsy-image-generator"
 version = "2.0.0"
