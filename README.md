@@ -54,10 +54,13 @@ make install
 
 ```bash
 cp .env.example .env
-# Edit .env and add your Replicate API token
+# Edit .env and add your provider API keys (at least one)
 ```
 
-Get your Replicate API token at: https://replicate.com/account/api-tokens
+Get API keys:
+- Replicate: https://replicate.com/account/api-tokens
+- OpenAI: https://platform.openai.com/api-keys
+- Gemini: https://aistudio.google.com/apikey
 
 ### 3. Run the UI
 
@@ -70,6 +73,9 @@ streamlit run app/streamlit_app.py
 ## Usage
 
 ### Via Streamlit UI
+
+
+The Streamlit sidebar key fields are optional: if left empty, the app now automatically uses keys from your environment/.env file.
 
 1. Open the app in your browser (default: http://localhost:8501)
 2. **Sidebar**: Choose provider, prompt template, output size, and variation settings
@@ -169,3 +175,21 @@ Then register it in the `get_provider` factory function.
 
 - Python 3.11+
 - Replicate API token (for default provider)
+
+
+## Deployment Notes (Vercel NOT_FOUND)
+
+This repo is a **Streamlit** app (`app/streamlit_app.py`). Streamlit expects a long-running application server, while Vercel primarily deploys serverless/static workloads.
+
+If you deploy this repo to Vercel without explicit routes, you can get a `NOT_FOUND` error.
+
+This repo now includes:
+- `vercel.json` routing all requests to `api/index.py`
+- `api/index.py` returning a clear JSON message explaining deployment options
+
+If you want the full UI online, deploy Streamlit to:
+- Streamlit Community Cloud
+- Render
+- Railway
+
+Use Vercel only if you plan to expose API-style endpoints instead of the Streamlit UI server.
