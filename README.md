@@ -175,3 +175,21 @@ Then register it in the `get_provider` factory function.
 
 - Python 3.11+
 - Replicate API token (for default provider)
+
+
+## Deployment Notes (Vercel NOT_FOUND)
+
+This repo is a **Streamlit** app (`app/streamlit_app.py`). Streamlit expects a long-running application server, while Vercel primarily deploys serverless/static workloads.
+
+If you deploy this repo to Vercel without explicit routes, you can get a `NOT_FOUND` error.
+
+This repo now includes:
+- `vercel.json` routing all requests to `api/index.py`
+- `api/index.py` returning a clear JSON message explaining deployment options
+
+If you want the full UI online, deploy Streamlit to:
+- Streamlit Community Cloud
+- Render
+- Railway
+
+Use Vercel only if you plan to expose API-style endpoints instead of the Streamlit UI server.
