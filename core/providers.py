@@ -15,6 +15,24 @@ from PIL import Image
 logger = logging.getLogger(__name__)
 
 
+def resolve_api_key(explicit_key: str | None, *env_vars: str) -> str:
+    """Resolve API key from explicit input and a list of env vars.
+
+    Priority:
+    1) Explicit key argument
+    2) First non-empty environment variable in env_vars
+    """
+    if explicit_key and explicit_key.strip():
+        return explicit_key.strip()
+
+    for env_var in env_vars:
+        value = os.environ.get(env_var, "").strip()
+        if value:
+            return value
+
+    return ""
+
+
 class ImageProvider(ABC):
     """Base interface for image generation providers."""
 
@@ -55,7 +73,7 @@ class ReplicateProvider(ImageProvider):
         api_token: str | None = None,
         model: str = "black-forest-labs/flux-schnell",
     ) -> None:
-        self.api_token = api_token or os.environ.get("REPLICATE_API_TOKEN", "")
+        self.api_token = resolve_api_key(api_token, "REPLICATE_API_TOKEN")
         self.model = model
         if not self.api_token:
             raise ValueError(
@@ -128,7 +146,7 @@ class OpenAIProvider(ImageProvider):
     provider_name = "openai"
 
     def __init__(self, api_key: str | None = None, model: str = "dall-e-3") -> None:
-        self.api_key = api_key or os.environ.get("OPENAI_API_KEY", "")
+        self.api_key = resolve_api_key(api_key, "OPENAI_API_KEY")
         self.model = model
         if not self.api_key:
             raise ValueError("OpenAI API key is required. Set OPENAI_API_KEY or pass api_key.")
@@ -204,7 +222,7 @@ class GeminiProvider(ImageProvider):
         api_key: str | None = None,
         model: str = "imagen-3.0-generate-002",
     ) -> None:
-        self.api_key = api_key or os.environ.get("GEMINI_API_KEY", "")
+        self.api_key = resolve_api_key(api_key, "GEMINI_API_KEY", "GOOGLE_API_KEY")
         self.model = model
         if not self.api_key:
             raise ValueError(

@@ -18,6 +18,7 @@ from __future__ import annotations
 import io
 import json
 import logging
+import os
 import shutil
 import sys
 import tempfile
@@ -120,42 +121,59 @@ with st.sidebar:
         help="Gemini (Google Imagen), Replicate (Flux), or OpenAI (DALL-E)",
     )
 
-    # Provider-specific API key input
+    # Provider-specific API key input (manual entry overrides .env)
     if provider_name == "gemini":
         api_key = st.text_input(
             "Gemini API Key",
-            value="AIzaSyABih4qe9TnNsSQKnyivJhogmnD3B63OI8",
+            value="",
             type="password",
-            help="Google AI Studio API key for Imagen + prompt enhancement",
+            help="Optional: leave blank to use GEMINI_API_KEY or GOOGLE_API_KEY from your environment/.env.",
         )
+        if api_key:
+            st.caption("Using Gemini key from sidebar input.")
+        elif os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"):
+            st.caption("Using Gemini key from environment (.env).")
     elif provider_name == "replicate":
         api_key = st.text_input(
             "Replicate API Token",
+            value="",
             type="password",
-            help="Get yours at replicate.com",
+            help="Optional: leave blank to use REPLICATE_API_TOKEN from your environment/.env.",
         )
+        if api_key:
+            st.caption("Using Replicate token from sidebar input.")
+        elif os.environ.get("REPLICATE_API_TOKEN"):
+            st.caption("Using Replicate token from environment (.env).")
     else:
         api_key = st.text_input(
             "OpenAI API Key",
+            value="",
             type="password",
-            help="Get yours at platform.openai.com",
+            help="Optional: leave blank to use OPENAI_API_KEY from your environment/.env.",
         )
+        if api_key:
+            st.caption("Using OpenAI key from sidebar input.")
+        elif os.environ.get("OPENAI_API_KEY"):
+            st.caption("Using OpenAI key from environment (.env).")
 
     # Gemini enhancer key (always available)
     st.divider()
     st.markdown("##### AI Prompt Enhancer")
     gemini_enhancer_key = st.text_input(
         "Gemini Enhancer Key",
-        value="AIzaSyABih4qe9TnNsSQKnyivJhogmnD3B63OI8",
+        value="",
         type="password",
-        help="Powers AI prompt enhancement regardless of image provider",
+        help="Optional: leave blank to use GEMINI_API_KEY or GOOGLE_API_KEY from your environment/.env.",
     )
     enable_enhancement = st.toggle("Enable AI Enhancement", value=True)
 
-    # Initialize enhancer
-    if gemini_enhancer_key:
-        st.session_state["enhancer"] = GeminiEnhancer(api_key=gemini_enhancer_key)
-        st.session_state["gemini_key"] = gemini_enhancer_key
+    # Initialize enhancer (explicit key overrides environment)
+    enhancer_key = gemini_enhancer_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY", "")
+    if enhancer_key:
+        st.session_state["enhancer"] = GeminiEnhancer(api_key=enhancer_key)
+        st.session_state["gemini_key"] = enhancer_key
+    else:
+        st.session_state["enhancer"] = GeminiEnhancer(api_key="")
 
     st.divider()
 
@@ -404,6 +422,10 @@ with tab_generate:
                 provider = get_provider(provider_name, **provider_kwargs)
             except ValueError as e:
                 st.error(str(e))
+                st.info(
+                    "Tip: add your key in the sidebar or create a .env file with the required variable "
+                    "(REPLICATE_API_TOKEN, OPENAI_API_KEY, GEMINI_API_KEY/GOOGLE_API_KEY)."
+                )
                 st.stop()
 
             # Init enhancer for pipeline

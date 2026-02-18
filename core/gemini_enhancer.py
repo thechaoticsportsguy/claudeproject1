@@ -54,7 +54,7 @@ class GeminiEnhancer:
     """Uses Google Gemini to enhance image generation prompts and provide style analysis."""
 
     def __init__(self, api_key: str | None = None, model: str = "gemini-2.0-flash") -> None:
-        self.api_key = api_key or os.environ.get("GEMINI_API_KEY", "")
+        self.api_key = api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY", "")
         self.model = model
         self._client = None
 
